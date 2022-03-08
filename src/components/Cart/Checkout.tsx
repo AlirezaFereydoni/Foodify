@@ -1,11 +1,18 @@
-import useInput from '../../hooks/use-input';
+import { FormEvent } from "react";
+import useInput from "../../hooks/use-input";
 
-import classes from './Checkout.module.css';
+import classes from "./Checkout.module.css";
+import { iConfirm } from "../../types/interfaces";
 
-const isEmpty = (value) => value.trim() !== '';
-const isFiveChars = (value) => value.trim().length === 5;
+interface iProps {
+  onConfirm: (data: iConfirm) => void;
+  onCancel: () => void;
+}
 
-const Checkout = (props) => {
+const isEmpty = (value: string) => value.trim() !== "";
+const isFiveChars = (value: string) => value.trim().length === 5;
+
+const Checkout = (props: iProps) => {
   const {
     value: nameValue,
     isValid: nameIsValid,
@@ -44,7 +51,7 @@ const Checkout = (props) => {
 
   const formIsValid = nameIsValid && streetIsValid && postalIsValid && cityIsValid;
 
-  const confirmHandler = (event) => {
+  const confirmHandler = (event: FormEvent) => {
     event.preventDefault();
 
     if (!formIsValid) {
@@ -64,10 +71,10 @@ const Checkout = (props) => {
     resetcity();
   };
 
-  const nameClasses = `${classes.control} ${nameHasError ? classes.invalid : ''}`;
-  const streetClasses = `${classes.control} ${streetHasError ? classes.invalid : ''}`;
-  const postalClasses = `${classes.control} ${postalHasError ? classes.invalid : ''}`;
-  const cityClasses = `${classes.control} ${cityHasError ? classes.invalid : ''}`;
+  const nameClasses = `${classes.control} ${nameHasError ? classes.invalid : ""}`;
+  const streetClasses = `${classes.control} ${streetHasError ? classes.invalid : ""}`;
+  const postalClasses = `${classes.control} ${postalHasError ? classes.invalid : ""}`;
+  const cityClasses = `${classes.control} ${cityHasError ? classes.invalid : ""}`;
 
   return (
     <form className={classes.form} onSubmit={confirmHandler}>
@@ -80,9 +87,7 @@ const Checkout = (props) => {
           onChange={nameChangeHandler}
           onBlur={nameBlurHandler}
         />
-        {nameHasError && (
-          <p className={classes.invalidtext}>Please enter a valid name!</p>
-        )}
+        {nameHasError && <p className={classes.invalidtext}>Please enter a valid name!</p>}
       </div>
       <div className={streetClasses}>
         <label htmlFor="street">Street</label>
@@ -93,9 +98,7 @@ const Checkout = (props) => {
           onChange={streetChangeHandler}
           onBlur={streetBlurHandler}
         />
-        {streetHasError && (
-          <p className={classes.invalidtext}>Please enter a valid street!</p>
-        )}
+        {streetHasError && <p className={classes.invalidtext}>Please enter a valid street!</p>}
       </div>
       <div className={postalClasses}>
         <label htmlFor="postal">Postal Code</label>
@@ -121,9 +124,7 @@ const Checkout = (props) => {
           onChange={cityChangeHandler}
           onBlur={cityBlurHandler}
         />
-        {cityHasError && (
-          <p className={classes.invalidtext}>Please enter a valid city!</p>
-        )}
+        {cityHasError && <p className={classes.invalidtext}>Please enter a valid city!</p>}
       </div>
       <div className={classes.actions}>
         <button type="button" onClick={props.onCancel}>
