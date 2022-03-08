@@ -1,26 +1,33 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext, useState } from "react";
 
-import Modal from '../UI/Modal';
-import CartItem from './CartItem';
-import classes from './Cart.module.css';
-import CartContext from '../../store/cart-context';
-import Checkout from './Checkout';
+import Modal from "../UI/Modal";
+import CartItem from "./CartItem";
+import classes from "./Cart.module.css";
+import CartContext from "../../store/cart-context";
+import Checkout from "./Checkout";
 
-const Cart = (props) => {
+// types
+import { itemType, iConfirm } from "../../types/interfaces";
+
+interface iProps {
+  onCloseCart: () => void;
+}
+
+const Cart = (props: iProps) => {
   const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
-  const [httpError, setHttpError] = useState();
+  const [httpError, setHttpError] = useState("");
 
   const cartCtx = useContext(CartContext);
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
 
-  const cartItemRemoveHandler = (id) => {
+  const cartItemRemoveHandler = (id: number) => {
     cartCtx.removeItem(id);
   };
 
-  const cartItemAddHandler = (item) => {
+  const cartItemAddHandler = (item: itemType) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
 
@@ -28,19 +35,19 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
-  const submitOrderHandler = async (userData) => {
+  const submitOrderHandler = async (userData: iConfirm) => {
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        'https://react-food-order-app-alireza-default-rtdb.firebaseio.com/orders.json',
+        "https://react-food-order-app-alireza-default-rtdb.firebaseio.com/orders.json",
         {
-          method: 'POST',
+          method: "POST",
           body: JSON.stringify({ user: userData, orderedItems: cartCtx.items }),
         }
       );
 
       if (!response.ok) {
-        throw new Error('Something went wrong!');
+        throw new Error("Something went wrong!");
       }
 
       setIsSubmitting(false);
@@ -54,13 +61,11 @@ const Cart = (props) => {
   };
 
   const cartItems = (
-    <ul className={classes['cart-items']}>
-      {cartCtx.items.map((item) => (
+    <ul className={classes["cart-items"]}>
+      {cartCtx.items.map(item => (
         <CartItem
+          {...item}
           key={item.id}
-          name={item.name}
-          amount={item.amount}
-          price={item.price}
           onRemove={cartItemRemoveHandler.bind(null, item.id)}
           onAdd={cartItemAddHandler.bind(null, item)}
         />
@@ -70,7 +75,7 @@ const Cart = (props) => {
 
   const modalActions = (
     <div className={classes.actions}>
-      <button className={classes['button--alt']} onClick={props.onCloseCart}>
+      <button className={classes["button--alt"]} onClick={props.onCloseCart}>
         Close
       </button>
       {hasItems && (
@@ -88,9 +93,7 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && (
-        <Checkout onConfirm={submitOrderHandler} onCancel={props.onCloseCart} />
-      )}
+      {isCheckout && <Checkout onConfirm={submitOrderHandler} onCancel={props.onCloseCart} />}
       {!isCheckout && modalActions}
     </Fragment>
   );
