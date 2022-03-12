@@ -53,7 +53,8 @@ const Cart = (props: iProps) => {
       setIsSubmitting(false);
       setDidSubmit(true);
       cartCtx.clearCart();
-    } catch (error) {
+    } catch (error: any) {
+      // fix any
       setHttpError(error.message);
       setIsSubmitting(false);
       setDidSubmit(false);
