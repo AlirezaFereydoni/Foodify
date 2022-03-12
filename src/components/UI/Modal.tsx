@@ -1,4 +1,4 @@
-import { Children, Fragment, ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 import ReactDom from "react-dom";
 
 import classes from "./Modal.module.css";

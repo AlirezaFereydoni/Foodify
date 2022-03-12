@@ -1,14 +1,14 @@
-import React, { Context } from "react";
+import { createContext } from "react";
 
 // types
-import { iCart } from "../types/interfaces";
+import { iCart, itemType } from "../types/interfaces";
 
-const CartContext: Context<iCart> = React.createContext({
+const CartContext = createContext({
   items: [],
   totalAmount: 0,
-  addItem: item => {},
-  removeItem: id => {},
+  addItem: (item: itemType) => {},
+  removeItem: (id: number) => {},
   clearCart: () => {},
-});
+} as iCart);
 
 export default CartContext;
